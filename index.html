@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.google.com/recaptcha/; style-src 'self' 'unsafe-inline'; frame-src 'self' https://www.google.com/;">
+    <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #121212;
+            color: white;
+            transition: background 0.3s, color 0.3s;
+            scroll-behavior: smooth;
+        }
+        header {
+            background: #333;
+            color: white;
+            padding: 1em;
+        }
+        nav {
+            background: #444;
+            padding: 10px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+        section {
+            padding: 50px 20px;
+        }
+        .hero {
+            background: url('hero-bg.jpg') center/cover no-repeat;
+            color: white;
+            padding: 100px 20px;
+            font-size: 2em;
+            font-weight: bold;
+        }
+        .contact-form input, .contact-form textarea {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+        }
+        .contact-form button {
+            padding: 10px 20px;
+            border: none;
+            background: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to My Portfolio</h1>
+        <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
+    </header>
+    <section class="hero">
+        <p>Creating Digital Experiences</p>
+    </section>
+    <nav>
+        <a href="#skills">Skills</a>
+        <a href="#testimonials">Testimonials</a>
+        <a href="#blog">Blog</a>
+        <a href="#contact">Contact</a>
+    </nav>
+    <section id="contact">
+        <h2>Contact Me</h2>
+        <form class="contact-form" onsubmit="return validateForm()">
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="email" id="email" placeholder="Your Email" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+            <input type="password" id="password" placeholder="Your Password" required>
+            <textarea id="message" placeholder="Your Message" required></textarea>
+            <div class="g-recaptcha" data-sitekey="your-site-key"></div>
+            <button type="submit">Send Message</button>
+        </form>
+        <button onclick="oauthLogin()">Login with Google</button>
+    </section>
+    <footer>
+        <p>&copy; 2025 My Portfolio | Visitors: <span id="visitorCount">0</span></p>
+    </footer>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        function sanitizeInput(input) {
+            return input.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+        function validateForm() {
+            let name = sanitizeInput(document.getElementById("name").value);
+            let email = sanitizeInput(document.getElementById("email").value);
+            let password = document.getElementById("password").value;
+            let message = sanitizeInput(document.getElementById("message").value);
+            let recaptchaResponse = document.querySelector(".g-recaptcha-response").value;
+            if (name === "" || email === "" || password === "" || message === "") {
+                alert("All fields are required!");
+                return false;
+            }
+            if (password.length < 8) {
+                alert("Password must be at least 8 characters long!");
+                return false;
+            }
+            if (recaptchaResponse === "") {
+                alert("Please complete the reCAPTCHA");
+                return false;
+            }
+            return true;
+        }
+        function toggleDarkMode() {
+            let darkMode = localStorage.getItem("darkMode");
+            if (darkMode === "enabled") {
+                document.body.classList.remove("light-mode");
+                localStorage.setItem("darkMode", "disabled");
+            } else {
+                document.body.classList.add("light-mode");
+                localStorage.setItem("darkMode", "enabled");
+            }
+        }
+        let visitorCount = parseInt(localStorage.getItem("visitorCount")) || 0;
+        visitorCount++;
+        localStorage.setItem("visitorCount", visitorCount);
+        document.getElementById("visitorCount").innerText = visitorCount;
+
+        // Implementing 2FA (Simulated for Demo)
+        function requestTwoFactorCode() {
+            let code = Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit code
+            alert("Your 2FA code is: " + code + " (Simulated)");
+            return code;
+        }
+        function verifyTwoFactor() {
+            let userCode = prompt("Enter your 2FA code:");
+            if (userCode === null || userCode === "") {
+                alert("2FA verification failed.");
+                return false;
+            }
+            alert("2FA verification successful!");
+            return true;
+        }
+        document.querySelector(".contact-form").onsubmit = function(event) {
+            if (!verifyTwoFactor()) {
+                event.preventDefault();
+            }
+        };
+
+        function oauthLogin() {
+            alert("Redirecting to Google OAuth... (Simulated)");
+        }
+    </script>
+</body>
+</html>
+
